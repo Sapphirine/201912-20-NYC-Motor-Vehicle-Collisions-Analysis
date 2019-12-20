@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Analysis</title>
+</head>
+
+<link rel="stylesheet" href="{% static "css/dashboard.css" %}">
+<body>
+<h1>Data Analysis</h1>
+<h2>Traffic Volume Analysis</h2>
+<div id='analysis'></div>
+<div id='volume_count'></div>
+<h2>Weather Analysis</h2>
+<div id='weather_fog'></div>
+<div id='weather_visibility'></div>
+<h2>Vehicle Type Analysis</h2>
+<div id='vehicle_type'></div>
+
+{#<script src="https://d3js.org/d3.v3.min.js"></script>#}
+<script src="https://d3js.org/d3.v4.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="{% static "js/correlation.js" %}"></script>
+<script>
+    var Data= {{ data | safe}}
+    {#dashboard('#basic_analysis', Data);#}
+    doublebar('#analysis');
+
+    var nofog1 = {{ nofog | safe }}
+    var fog1 = {{ fog | safe }}
+
+    var visx = {{ x | safe }}
+    var visy = {{ y | safe }}
+
+    var fog = {
+        y: fog1,
+        type: 'box',
+        name: "Fog"
+    };
+
+    var no_fog = {
+        y: nofog1,
+        type: 'box',
+        name: "No Fog"
+    };
+
+    var vis = {
+        x:visx,
+        y: visy,
+        type:'lines+markers',
+        name: "Visibility"
+    };
+
+    var volume1 = {
+        x: [21255, 11122, 8387, 7275, 8177, 8835, 13949, 20087, 42016, 41160, 38552, 40203, 42715, 44903, 51820, 46491, 54911, 53287, 46868, 38109, 31639, 26340, 23597, 18375],
+        y: [ 678, 512, 402, 342, 349, 468, 797, 1080, 1158, 1150, 1166, 1211, 1251, 1294, 1357, 1441, 1472, 1479, 1402, 1255, 1072, 927, 828, 753],
+        mode: 'markers',
+        marker:{
+            size: 8
+        },
+        name: "data point"
+    };
+
+    var volume2 = {
+        x: [5000,60000],
+        y: [413.48754106397973,1648.2072910639795],
+        mode: 'lines',
+        name: "regression line"
+    };
+
+    var bar1 = {
+        x: ['Sedan','SUV', 'Taxi', 'Pick-up', 'Van', 'Motorcycle'],
+        y: [189441/412688, 151762/412688, 20206/412688, 12636/412688, 2375/412688, 2183/412688],
+        type: 'bar',
+        name: "Collision type summary"
+    };
+
+    var bar2 = {
+        x: ['Sedan','SUV', 'Taxi', 'Pick-up', 'Van', 'Motorcycle'],
+        y: [836379/2188734, 1143226/2188734, 10283/2188734, 10984/2188734, 51390/2188734, 45912/2188734],
+        type: 'bar',
+        name: "Registration type summary"
+    };
+
+    var data = [fog, no_fog];
+    var layout = {
+        width:900,
+        height:500,
+        title:{
+            text: "Foggy weather accident number Box Plot",
+            xref: "paper"
+        },
+        margin:{
+            l:350
+        }
+    };
+
+    var layout2 = {
+        width:900,
+        height:500,
+        title:{
+            text: "Visibility and accident number plot",
+            xref: "paper"
+        },
+        margin:{
+            l:350
+        },
+        xaxis:{
+            title: "Visibility"
+        },
+        yaxis:{
+            title: "Average of injured in an accident"
+        }
+    };
+
+    var layout3 = {
+        width:900,
+        height:500,
+        title:{
+            text: "Relationship between accident number and traffic volume",
+            xref: "paper"
+        },
+        margin:{
+            l:350
+        },
+        xaxis:{
+            title: "Vehicle Accident Number"
+        },
+        yaxis:{
+            title: "Traffic Volume Number"
+        }
+    };
+
+    var layout4 = {
+        width:1000,
+        height:500,
+        margin:{
+            l:350
+        },
+        title:{
+            text: "Vehicle Type Distribution",
+            xref: "paper"
+        },
+        barmode: 'group',
+        xaxis:{
+            title: "Vehicle Type"
+        },
+        yaxis:{
+            title: "Percentage Value"
+        }
+    };
+
+    var data4 = [bar1,bar2];
+    var data3 = [volume1, volume2];
+
+    Plotly.newPlot('weather_fog', data, layout);
+    Plotly.newPlot('weather_visibility', [vis], layout2);
+    Plotly.newPlot('volume_count', data3, layout3);
+    Plotly.newPlot('vehicle_type', data4, layout4);
+</script>
+</body>
+</html>

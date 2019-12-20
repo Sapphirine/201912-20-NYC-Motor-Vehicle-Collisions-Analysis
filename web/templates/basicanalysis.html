@@ -1,0 +1,23 @@
+<html>
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <title>Basic Analysis</title>
+</head>
+<link rel="stylesheet" href="{% static "css/dashboard.css" %}">
+<body>
+<h1>Basic Analysis</h1>
+<div id='dashboard'></div>
+<div id='analysis'></div>
+
+<svg class="bar-chart"></svg>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+{#<script src="https://d3js.org/d3.v4.js"></script>#}
+<script src="{% static "js/correlation.js" %}"></script>
+<script>
+    var Data= {{ data | safe}}
+    dashboard('#dashboard', Data)
+
+</script>
+</body>
+</html>
